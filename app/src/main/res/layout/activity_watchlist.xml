@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    tools:context=".WatchListActivity">
+
+
+    <TextView
+        android:id="@+id/watchlist"
+        android:layout_width="match_parent"
+        android:layout_height="113dp"
+        android:layout_gravity="center"
+
+        android:background="@drawable/walletbox"
+        android:fontFamily="source-sans-pro"
+        android:gravity="center"
+        android:text="@string/balance"
+        android:textColor="@color/brown"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:ignore="TextContrastCheck" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/refresh_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="99dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/refreshbox"
+            android:drawableStart="@android:drawable/ic_menu_rotate"
+            android:paddingStart="85dp"
+            tools:ignore="RtlSymmetry,SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/delete_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="99dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/deletebox"
+            android:drawableStart="@android:drawable/ic_menu_delete"
+            android:paddingStart="82dp"
+            tools:ignore="RtlSymmetry,SpeakableTextPresentCheck" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="237dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:backgroundTint="#CAAE33"
+            android:src="@drawable/ic_baseline_add_24" />
+
+    </RelativeLayout>
+</LinearLayout>

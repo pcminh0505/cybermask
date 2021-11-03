@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.walletmanagement">
+    package="com.example.cybermask">
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WalletManagement">
         <activity
-            android:name=".MainActivity"
+            android:name=".CreateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddTokenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WatchListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

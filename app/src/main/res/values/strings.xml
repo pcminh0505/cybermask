@@ -1,3 +1,42 @@
 <resources>
-    <string name="app_name">WalletManagement</string>
+    <string name="app_name">CyberMask</string>
+    <string name="balance">TextView</string>
+
+    <string-array name="token_name">
+        <item>Cardano</item>
+        <item>Binance Coin</item>
+        <item>Bitcoin</item>
+        <item>PancakeSwap</item>
+        <item>CELO</item>
+        <item>Dogecoin</item>
+        <item>Polkadot</item>
+        <item>Ethereum</item>
+        <item>Fantom</item>
+        <item>FTX Token</item>
+        <item>Decentraland</item>
+        <item>NEAR Protocol</item>
+        <item>Shiba Inu</item>
+        <item>Solana</item>
+        <item>Uniswap</item>
+        <item>Ripple</item>
+    </string-array>
+
+    <string-array name="token_code">
+        <item>ADA</item>
+        <item>BNB</item>
+        <item>BTC</item>
+        <item>CAKE</item>
+        <item>CELO</item>
+        <item>DOGE</item>
+        <item>DOT</item>
+        <item>ETH</item>
+        <item>FTM</item>
+        <item>FTT</item>
+        <item>MANA</item>
+        <item>NEAR</item>
+        <item>SHIB</item>
+        <item>SOL</item>
+        <item>UNI</item>
+        <item>XRP</item>
+    </string-array>
 </resources>
