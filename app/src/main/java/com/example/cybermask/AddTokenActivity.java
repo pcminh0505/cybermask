@@ -2,41 +2,29 @@ package com.example.cybermask;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 public class AddTokenActivity extends AppCompatActivity {
 
     // Define the dictionary for token symbol - name since no API support this (Eg. BTC - Bitcoin).
     // For the simplicity, only 16 tokens will be mentioned.
-    public final Map<String, String> TOKEN_DICTIONARY = new HashMap<String, String>() {{
-        put("ADA", "Cardano");
-        put("BNB", "Binance Coin");
-        put("BTC", "Bitcoin");
-        put("CAKE", "Pancake Swap");
-        put("CELO", "Celo");
-        put("DOGE", "Dogecoin");
-        put("DOT", "Polkadot");
-        put("ETH", "Ethereum");
-        put("FTM", "Fantom");
-        put("FTT", "FTX Token");
-        put("MANA", "Decentraland");
-        put("NEAR", "NEAR Protocol");
-        put("SHIB", "Shiba Inu");
-        put("SOL", "Solana");
-        put("UNI", "Uniswap");
-        put("XRP", "Ripple");
-    }};
+    public final ArrayList<String> TOKEN_LIST = new ArrayList<>(Arrays.asList("ADA","BNB","BTC","CAKE","CELO","DOGE","DOT","ETH","FTM","FTT","MANA","NEAR","SHIB","SOL","UNI","XRP"));
 
     // Initialize variables for CreateAcitivity
     EditText tokenNameText;
-    String tokenName;
+    String tokenSymbol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,24 +41,27 @@ public class AddTokenActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Get the input text
-                tokenName = tokenNameText.getText().toString();
+                tokenSymbol = tokenNameText.getText().toString();
 
                 // Set a flag to check in the HashMap database
                 boolean isExisted = false;
-                for (String key : TOKEN_DICTIONARY.keySet()) {
-                    if (key.equals(tokenName.toUpperCase())) {
+                for (String key : TOKEN_LIST) {
+                    if (key.equals(tokenSymbol.toUpperCase())) {
                         isExisted = true;
                         break;
                     }
                 }
 
+                // If existed, send back the token's symbol to MainActivity. Else keep "toasting"
                 if (isExisted) {
-                    Toast.makeText(getApplicationContext(), "Hello", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(AddTokenActivity.this,MainActivity.class);
+                    i.putExtra("tokenSymbol", tokenSymbol);
+                    setResult(RESULT_OK, i);
+                    finish();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Sorry the token isn't available in the database", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Sorry the token isn't available in the database. Please try other token.", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }

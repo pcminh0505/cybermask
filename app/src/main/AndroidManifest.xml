@@ -10,13 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WalletManagement">
         <activity
-            android:name=".CreateActivity"
+            android:name=".CreateWatchListActivity"
             android:exported="false" />
         <activity
             android:name=".AddTokenActivity"
             android:exported="false" />
         <activity
-            android:name=".WatchListActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".SplashScreenActivity"

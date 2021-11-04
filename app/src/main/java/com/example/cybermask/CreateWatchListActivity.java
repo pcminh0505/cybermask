@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class CreateActivity extends AppCompatActivity {
+public class CreateWatchListActivity extends AppCompatActivity {
 
     // Initialize variables for CreateAcitivity
     EditText watchlist_text;
@@ -29,7 +29,7 @@ public class CreateActivity extends AppCompatActivity {
                 watchlist_name = watchlist_text.getText().toString();
 
                 // Send "watchlist_name" to "WalletActivity"
-                Intent i = new Intent (CreateActivity.this, WatchListActivity.class);
+                Intent i = new Intent (CreateWatchListActivity.this, MainActivity.class);
                 i.putExtra("watchlist_name",watchlist_name);
                 startActivity(i);
                 watchlist_text.setText("New Watchlist");

@@ -4,32 +4,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class WatchListActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    private ArrayList<String> mCryptoSymbol;
 
-    ArrayList<String> cryptoName = new ArrayList<>();
-    ArrayList<String> cryptoSymbol = new ArrayList<>();
-    ArrayList<Integer> cryptoImage = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private MyAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
+    protected void buildRecyclerView() {
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new MyAdapter(this, mCryptoSymbol);
 
-    String name[], symbol[];
-    int images[] = {R.drawable.ada, R.drawable.bnb, R.drawable.btc, R.drawable.cake,
-            R.drawable.celo, R.drawable.doge, R.drawable.dot, R.drawable.eth,
-            R.drawable.ftm, R.drawable.ftt, R.drawable.mana, R.drawable.near,
-            R.drawable.shib, R.drawable.sol, R.drawable.uni, R.drawable.xrp
-    };
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+    }
 
 
     @Override
@@ -38,12 +39,7 @@ public class WatchListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_watchlist);
 
         // Setup RecyclerView
-        recyclerView = findViewById(R.id.recyclerView);
-//        name = getResources().getStringArray(R.array.token_name);
-//        symbol = getResources().getStringArray(R.array.token_symbol);
-
-        MyAdapter myAdapter = new MyAdapter(this, cryptoName, cryptoSymbol,cryptoImage);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        buildRecyclerView();
 
         // Receive intent value for watchlist name
         Intent i = getIntent();
@@ -67,19 +63,15 @@ public class WatchListActivity extends AppCompatActivity {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.setAdapter(myAdapter);
+
             }
         });
-
-
-
-
 
         FloatingActionButton addButton = (FloatingActionButton ) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(WatchListActivity.this, AddTokenActivity.class);
+                Intent i = new Intent(MainActivity.this, AddTokenActivity.class);
                 startActivityForResult(i,100);
             }
         });
@@ -94,6 +86,14 @@ public class WatchListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
+        // Receive data from AddTokenActivity
+        if (requestCode == 100) {
+            if (resultCode == RESULT_OK) {
+                String resultSymbol = data.getStringExtra("tokenSymbol").toUpperCase();
+                mCryptoSymbol.add(resultSymbol);
+                mAdapter.notifyItemInserted(mCryptoSymbol.size() - 1);
+                Toast.makeText(getApplicationContext(), "Token " + resultSymbol + " has been added successfully!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
