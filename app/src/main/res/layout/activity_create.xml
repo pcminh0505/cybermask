@@ -27,6 +27,8 @@
         android:inputType="textPersonName"
         android:text="New Watchlist"
         android:textSize="20sp"
+        android:gravity="center"
+        android:background="@drawable/inputbox"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.486"

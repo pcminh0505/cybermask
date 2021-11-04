@@ -21,7 +21,7 @@
         <item>Ripple</item>
     </string-array>
 
-    <string-array name="token_code">
+    <string-array name="token_symbol">
         <item>ADA</item>
         <item>BNB</item>
         <item>BTC</item>

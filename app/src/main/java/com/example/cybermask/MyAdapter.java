@@ -10,13 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    String data1[], data2[];
-    int images[];
+    ArrayList<String> data1, data2;
+    ArrayList<Integer> images;
     Context context;
 
-    public MyAdapter (Context ct, String name[], String code[], int img[]) {
+    public MyAdapter (Context ct, ArrayList<String> name, ArrayList<String> code, ArrayList<Integer> img) {
         context = ct;
         data1 = name;
         data2 = code;
@@ -33,14 +35,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.name_text.setText((data1[position]));
-        holder.code_text.setText((data2[position]));
-        holder.token_icon.setImageResource(images[position]);
+        holder.name_text.setText((data1.get(position)));
+        holder.code_text.setText((data2.get(position)));
+        holder.token_icon.setImageResource(images.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return data1.length;
+        return data1.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -53,7 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             name_text = itemView.findViewById(R.id.name_text);
-            code_text = itemView.findViewById(R.id.code_text);
+            code_text = itemView.findViewById(R.id.symbol_text);
             token_icon = itemView.findViewById(R.id.token_icon);
         }
     }
