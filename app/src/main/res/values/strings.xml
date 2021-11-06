@@ -2,6 +2,7 @@
     <string name="app_name">CyberMask</string>
     <string name="balance">TextView</string>
 
+    // Mock data
     <string-array name="token_name">
         <item>Cardano</item>
         <item>Binance Coin</item>

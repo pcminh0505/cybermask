@@ -11,10 +11,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 public class AddTokenActivity extends AppCompatActivity {
 
@@ -22,7 +18,7 @@ public class AddTokenActivity extends AppCompatActivity {
     // For the simplicity, only 16 tokens will be mentioned.
     public final ArrayList<String> TOKEN_LIST = new ArrayList<>(Arrays.asList("ADA","BNB","BTC","CAKE","CELO","DOGE","DOT","ETH","FTM","FTT","MANA","NEAR","SHIB","SOL","UNI","XRP"));
 
-    // Initialize variables for CreateAcitivity
+    // Initialize variables for AddTokenAcitivity
     EditText tokenNameText;
     String tokenSymbol;
 
@@ -31,10 +27,14 @@ public class AddTokenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_token);
 
+        // Wire the editText on the screen
         tokenNameText = findViewById(R.id.add_token_text);
 
+        // Get the data from MainActivity to check the existed token in the list
+        Intent i = getIntent();
+        ArrayList<String> existedList = i.getExtras().getStringArrayList("existedList");
 
-
+        // Wire the "Add" button
         Button addToken = (Button) findViewById(R.id.add_token_button);
         addToken.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,24 +43,17 @@ public class AddTokenActivity extends AppCompatActivity {
                 // Get the input text
                 tokenSymbol = tokenNameText.getText().toString();
 
-                // Set a flag to check in the HashMap database
-                boolean isExisted = false;
-                for (String key : TOKEN_LIST) {
-                    if (key.equals(tokenSymbol.toUpperCase())) {
-                        isExisted = true;
-                        break;
-                    }
-                }
-
                 // If existed, send back the token's symbol to MainActivity. Else keep "toasting"
-                if (isExisted) {
+                if (TOKEN_LIST.contains(tokenSymbol.toUpperCase()) &&
+                        !existedList.contains(tokenSymbol.toUpperCase())) {
                     Intent i = new Intent(AddTokenActivity.this,MainActivity.class);
                     i.putExtra("tokenSymbol", tokenSymbol);
                     setResult(RESULT_OK, i);
                     finish();
-                }
-                else {
+                } else if (!TOKEN_LIST.contains(tokenSymbol.toUpperCase())) {
                     Toast.makeText(getApplicationContext(), "Sorry the token isn't available in the database. Please try other token.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "You've already saved this token.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

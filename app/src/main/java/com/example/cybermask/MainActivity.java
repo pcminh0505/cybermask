@@ -14,32 +14,27 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> mCryptoSymbol;
+    // Keep track of local database
+    private ArrayList<Token> mCrypto = new ArrayList<>();
 
+    // Setup recyclerview
     private RecyclerView mRecyclerView;
     private MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     protected void buildRecyclerView() {
-        mRecyclerView = findViewById(R.id.recyclerView);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new MyAdapter(this, mCryptoSymbol);
-
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_watchlist);
-
-        // Setup RecyclerView
-        buildRecyclerView();
 
         // Receive intent value for watchlist name
         Intent i = getIntent();
@@ -48,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
         // Wire watchList text and pass the value
         TextView watchlist = (TextView) findViewById(R.id.watchlist);
         watchlist.setText(watchlistName);
+
+        // Setup RecyclerView
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new MyAdapter(this, mCrypto);
+        buildRecyclerView();
 
         // Define delete all watchlist button
         Button deleteButton = (Button) findViewById(R.id.delete_button);
@@ -63,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Fetch / Refresh the data
+                Helper.getAPIData(MainActivity.this,mCrypto);
+                mAdapter.notifyDataSetChanged();
             }
         });
 
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, AddTokenActivity.class);
+                ArrayList<String> existedList = Helper.createSymbolList(mCrypto);
+                i.putExtra("existedList",existedList);
                 startActivityForResult(i,100);
             }
         });
@@ -90,8 +95,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
                 String resultSymbol = data.getStringExtra("tokenSymbol").toUpperCase();
-                mCryptoSymbol.add(resultSymbol);
-                mAdapter.notifyItemInserted(mCryptoSymbol.size() - 1);
+                // Create + Add the token to the ArrayList
+                mCrypto.add(new Token(resultSymbol, Helper.getResourceImage(resultSymbol,this)));
+                Helper.getAPIData(MainActivity.this,mCrypto);
+                mAdapter.notifyItemInserted(mCrypto.size()-1);
                 Toast.makeText(getApplicationContext(), "Token " + resultSymbol + " has been added successfully!", Toast.LENGTH_SHORT).show();
             }
         }
