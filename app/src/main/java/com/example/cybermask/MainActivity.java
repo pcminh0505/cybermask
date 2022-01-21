@@ -1,6 +1,8 @@
 package com.example.cybermask;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +29,17 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
 
     protected void buildRecyclerView() {
+
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new MyAdapter(this, mCrypto);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        ItemTouchHelper.Callback callback = new RowTouchHelper(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        mAdapter.setTouchHelper(itemTouchHelper);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -45,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
         watchlist.setText(watchlistName);
 
         // Setup RecyclerView
-        mRecyclerView = findViewById(R.id.recyclerView);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new MyAdapter(this, mCrypto);
         buildRecyclerView();
 
         // Define delete all watchlist button
@@ -65,26 +74,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Fetch / Refresh the data
-                Helper.getAPIData(MainActivity.this,mCrypto);
+                Helper.getAPIData(MainActivity.this, mCrypto);
                 mAdapter.notifyDataSetChanged();
             }
         });
 
-        FloatingActionButton addButton = (FloatingActionButton ) findViewById(R.id.add_button);
+        FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, AddTokenActivity.class);
                 ArrayList<String> existedList = Helper.createSymbolList(mCrypto);
-                i.putExtra("existedList",existedList);
-                startActivityForResult(i,100);
+                i.putExtra("existedList", existedList);
+                startActivityForResult(i, 100);
             }
         });
     }
 
     protected void openDialog() {
         DeleteDialog deleteDialog = new DeleteDialog();
-        deleteDialog.show(getSupportFragmentManager(),"Delete Dialog");
+        deleteDialog.show(getSupportFragmentManager(), "Delete Dialog");
     }
 
     @Override
@@ -96,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String resultSymbol = data.getStringExtra("tokenSymbol").toUpperCase();
                 // Create + Add the token to the ArrayList
-                mCrypto.add(new Token(resultSymbol, Helper.getResourceImage(resultSymbol,this)));
-                Helper.getAPIData(MainActivity.this,mCrypto);
-                mAdapter.notifyItemInserted(mCrypto.size()-1);
+                mCrypto.add(new Token(resultSymbol, Helper.getResourceImage(resultSymbol, this)));
+                Helper.getAPIData(MainActivity.this, mCrypto);
+                mAdapter.notifyItemInserted(mCrypto.size() - 1);
                 Toast.makeText(getApplicationContext(), "Token " + resultSymbol + " has been added successfully!", Toast.LENGTH_SHORT).show();
             }
         }

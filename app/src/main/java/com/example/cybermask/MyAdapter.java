@@ -2,21 +2,26 @@ package com.example.cybermask;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    Context context;
-    ArrayList<Token> tokens;
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> implements ItemTouchHelperAdapter {
+    private Context context;
+    private ArrayList<Token> tokens;
+    private ItemTouchHelper touchHelper;
 
 
     public MyAdapter (Context ct,ArrayList<Token> tokens) {
@@ -55,11 +60,34 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return tokens.size();
     }
 
+    // ItemTouchHelper Implementation
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Token fromToken = tokens.get(fromPosition);
+        tokens.remove(fromToken);
+        tokens.add(toPosition,fromToken);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public void onItemSwiped(int position) {
+        tokens.remove(position);
+        Toast.makeText(context.getApplicationContext(), "Item has been deleted",Toast.LENGTH_SHORT).show();
+        notifyItemRemoved(position);
+    }
+
+    public void setTouchHelper(ItemTouchHelper touchHelper) {
+        this.touchHelper = touchHelper;
+    }
+
     // Wire the element in the custom view (Row) to the Recyclerview
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements
+            View.OnTouchListener,
+            GestureDetector.OnGestureListener {
 
         TextView tokenName, tokenSymbol, tokenPrice, tokenPriceChange;
         ImageView tokenIcon;
+        GestureDetector gestureDetector;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +96,46 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             tokenIcon = itemView.findViewById(R.id.token_icon);
             tokenPriceChange = itemView.findViewById(R.id.price_change_text);
             tokenPrice = itemView.findViewById(R.id.price_text);
+            gestureDetector = new GestureDetector(itemView.getContext(),this);
+
+            itemView.setOnTouchListener(this);
+        }
+
+        // Implement Interface to control movement. Please note that it's only applied for LONG-PRESSED action
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            touchHelper.startDrag(this);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return true;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            gestureDetector.onTouchEvent(event);
+            return true;
         }
     }
 }
